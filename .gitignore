@@ -5,8 +5,7 @@
 .DS_Store
 
 # Project
-/input
-/output
+/static
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

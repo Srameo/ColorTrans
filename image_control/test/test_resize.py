@@ -9,5 +9,5 @@ if __name__ == "__main__":
     input_path = path_join(root_path, INPUT_PATH, input_filename)
     output_path = path_join(root_path, OUTPUT_PATH, output_filename)
     ic = ImageController(input_path)
-    ic.resize(output_path, False, 0.5)
-    # ic.resize(output_path, 64, 64)
+    # ic.resize(output_path, False, 0.5)
+    # ic.resize(output_path, True, 64, 64)
