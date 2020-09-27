@@ -22,14 +22,14 @@ class ImageController:
         """
         if len(args) == 1:
             # 按照比例缩放
-            return self.resize_image_scale(out_path, args[0], save)
+            return self.__resize_image_scale(out_path, args[0], save)
         elif len(args) == 2:
             # 按照 width 和 height 调整大小
-            return self.resize_image_size(out_path, args[0], args[1], save)
+            return self.__resize_image_size(out_path, args[0], args[1], save)
         else:
             pass
 
-    def resize_image_scale(self, out_path: str, scale: float, save: bool):
+    def __resize_image_scale(self, out_path: str, scale: float, save: bool):
         """
         改变图像大小(按照比例)
         :param save: 是否保存
@@ -47,7 +47,7 @@ class ImageController:
         ic.img = out
         return ic
 
-    def resize_image_size(self, out_path: str, width: int, height: int, save: bool):
+    def __resize_image_size(self, out_path: str, width: int, height: int, save: bool):
         """
         改变图像大小(按照给定图像大小)
         :param save: 是否保存
