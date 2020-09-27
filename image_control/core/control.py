@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 class ImageController:
@@ -7,7 +8,7 @@ class ImageController:
     """
 
     img = None
-    color_space = "BGR"
+    color_space = "RGB"
 
     def __init__(self, file: str = None):
         if file is not None:
@@ -18,19 +19,19 @@ class ImageController:
         将图像转换成 lab 颜色空间
         :return: self
         """
-        if self.color_space == "BGR":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
+        if self.color_space == "RGB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2LAB)
             self.color_space = "LAB"
         return self
 
-    def cvt_BGR(self):
+    def cvt_RGB(self):
         """
         将图像转换成 bgr 颜色空间
         :return: self
         """
         if self.color_space == "LAB":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
-            self.color_space = "BGR"
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2RGB)
+            self.color_space = "RGB"
         return self
 
     def resize(self, out_path: str, save: bool, *args):
@@ -84,3 +85,13 @@ class ImageController:
         ic = ImageController()
         ic.img = out
         return ic
+
+    def as_float(self):
+        if self.img is not None:
+            self.img = self.img.astype(np.float32)
+        return self
+
+    def as_unit(self):
+        if self.img is not None:
+            self.img = self.img.astype(np.uint8)
+        return self

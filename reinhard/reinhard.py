@@ -4,8 +4,8 @@ from common_utils.utils import get_root_path, path_join
 import numpy as np
 import cv2
 
-SRC_IMG = path_join("reinhard", "scene", "day.jpg")
-REF_IMG = path_join("reinhard", "scene", "night.jpg")
+SRC_IMG = path_join("reinhard", "scene", "night.jpg")
+REF_IMG = path_join("reinhard", "scene", "day.jpg")
 OUTPUT_IMG = path_join("reinhard", "scene", "result.jpg")
 
 
@@ -44,21 +44,27 @@ def reinhard(src: ImageController, ref: ImageController) -> None:
     src_std = std_LAB(src)
     ref_std = std_LAB(ref)
 
+    # src 设置为 float 格式
+    src.as_float()
+
     # 减去平均值
     src.img[..., 0] = src.img[..., 0] - src_m[0]
     src.img[..., 1] = src.img[..., 1] - src_m[1]
     src.img[..., 2] = src.img[..., 2] - src_m[2]
 
     # 按照标准差缩放
-    src.img[..., 0] = src.img[..., 0].astype('float64') * ref_std[0] / src_std[0]
-    src.img[..., 1] = src.img[..., 1].astype('float64') * ref_std[1] / src_std[1]
-    src.img[..., 2] = src.img[..., 2].astype('float64') * ref_std[2] / src_std[2]
+    src.img[..., 0] *= ref_std[0] / src_std[0]
+    src.img[..., 1] *= ref_std[1] / src_std[1]
+    src.img[..., 2] *= ref_std[2] / src_std[2]
 
     # 加上目标图像均值
     src.img[..., 0] = src.img[..., 0] + ref_m[0]
     src.img[..., 1] = src.img[..., 1] + ref_m[1]
     src.img[..., 2] = src.img[..., 2] + ref_m[2]
-    cv2.imwrite(path_join(root_path, OUTPUT_PATH, OUTPUT_IMG), src.cvt_BGR().img)
+
+    # 保存图像
+    src.as_unit()
+    cv2.imwrite(path_join(root_path, OUTPUT_PATH, OUTPUT_IMG), src.cvt_RGB().img)
 
 
 if __name__ == "__main__":
