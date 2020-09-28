@@ -13,6 +13,8 @@ class ImageController:
     def __init__(self, file: str = None):
         if file is not None:
             self.img = cv2.imread(file, cv2.IMREAD_UNCHANGED)
+            if isinstance(self.img, type(None)):
+                raise ValueError("当前路径 " + file + " 不是一张图片！")
 
     def cvt_LAB(self):
         """

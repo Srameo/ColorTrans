@@ -4,9 +4,9 @@ from common_utils.utils import get_root_path, path_join
 import numpy as np
 import cv2
 
-SRC_IMG = path_join("reinhard", "scene", "night.jpg")
-REF_IMG = path_join("reinhard", "scene", "day.jpg")
-OUTPUT_IMG = path_join("reinhard", "scene", "result.jpg")
+SRC_IMG = path_join("reinhard", "sea", "day.png")
+REF_IMG = path_join("reinhard", "sea", "night.png")
+OUTPUT_IMG = path_join("reinhard", "sea", "result.png")
 
 
 def mean_LAB(img: ImageController) -> tuple:
