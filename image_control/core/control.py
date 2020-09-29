@@ -12,7 +12,7 @@ class ImageController:
 
     def __init__(self, file: str = None):
         if file is not None:
-            self.img = cv2.imread(file, cv2.IMREAD_UNCHANGED)
+            self.img = cv2.imread(file, cv2.IMREAD_COLOR)
             if isinstance(self.img, type(None)):
                 raise ValueError("当前路径 " + file + " 不是一张图片！")
 
@@ -88,12 +88,30 @@ class ImageController:
         ic.img = out
         return ic
 
+    def reshape(self) -> np.ndarray:
+        height = self.img.shape[0]
+        width = self.img.shape[1]
+        colors = self.img.shape[2]
+        return self.img.reshape((height * width, colors))
+
+    def k_means(self, k):
+
+        pass
+
     def as_float(self):
+        """
+        将数组变为float形式
+        :return: None
+        """
         if self.img is not None:
             self.img = self.img.astype(np.float32)
         return self
 
     def as_unit(self):
+        """
+        讲数组变成uint形式
+        :return: None
+        """
         if self.img is not None:
             self.img = self.img.astype(np.uint8)
         return self

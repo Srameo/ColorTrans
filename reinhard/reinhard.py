@@ -1,6 +1,6 @@
 from image_control.core.control import ImageController
-from common_utils.utils import INPUT_PATH, OUTPUT_PATH
-from common_utils.utils import get_root_path, path_join
+from common_utils.core.path_utils import INPUT_PATH, OUTPUT_PATH
+from common_utils.core.path_utils import get_root_path, path_join
 import numpy as np
 import cv2
 
