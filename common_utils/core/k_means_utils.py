@@ -67,4 +67,4 @@ def k_means(mat: np.ndarray, k: int, iters: int):
         print("iter", i)
         update_k_means(dots, clusters)
         i += 1
-    return clusters
+    return dots, clusters
