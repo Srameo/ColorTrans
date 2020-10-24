@@ -7,14 +7,14 @@ class ImageController:
     用于处理单一图像的 controller
     """
 
-    img = None
-    color_space = "RGB"
-
-    def __init__(self, file: str = None):
+    def __init__(self, file: str = None, matrix=None):
         if file is not None:
             self.img = cv2.imread(file, cv2.IMREAD_COLOR)
             if isinstance(self.img, type(None)):
                 raise ValueError("当前路径 " + file + " 不是一张图片！")
+        else:
+            self.img = matrix
+        self.color_space = "RGB"
 
     def cvt_LAB(self):
         """
@@ -95,7 +95,6 @@ class ImageController:
         return self.img.reshape((height * width, colors))
 
     def k_means(self, k):
-
         pass
 
     def as_float(self):

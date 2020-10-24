@@ -1,6 +1,6 @@
-from common_utils.core.k_means_utils import get_k_class, ndarray_to_list, k_means
-from common_utils.core.path_utils import get_root_path, path_join, INPUT_PATH, OUTPUT_PATH
-from image_control.core.control import ImageController
+from src.common_utils import k_means
+from src.common_utils import get_root_path, path_join, INPUT_PATH, OUTPUT_PATH
+from src.image_control import ImageController
 import numpy as np
 import cv2
 

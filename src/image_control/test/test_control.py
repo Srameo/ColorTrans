@@ -1,6 +1,6 @@
-from image_control.core.control import ImageController
-from common_utils.core.path_utils import INPUT_PATH, OUTPUT_PATH
-from common_utils.core.path_utils import get_root_path, path_join
+from src.image_control import ImageController
+from src.common_utils import INPUT_PATH, OUTPUT_PATH
+from src.common_utils import get_root_path, path_join
 
 if __name__ == "__main__":
     root_path = get_root_path()
