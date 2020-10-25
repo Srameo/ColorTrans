@@ -37,7 +37,7 @@ def std_LAB(img: ImageController) -> tuple:
     return nl, na, nb
 
 
-def reinhard(src: ImageController, ref: ImageController) -> None:
+def reinhard(src: ImageController, ref: ImageController) -> ImageController:
     # 计算标准差和平均值
     src_m = mean_LAB(src)
     ref_m = mean_LAB(ref)
@@ -70,8 +70,8 @@ def reinhard(src: ImageController, ref: ImageController) -> None:
 if __name__ == "__main__":
     # 获取图像
     root_path = get_root_path()
-    src_ic = ImageController(path_join(root_path, INPUT_PATH, SRC_IMG))
-    ref_ic = ImageController(path_join(root_path, INPUT_PATH, REF_IMG))
+    src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
+    ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
 
     # reinhard
     reinhard(src_ic, ref_ic)

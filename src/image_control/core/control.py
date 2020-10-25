@@ -7,14 +7,17 @@ class ImageController:
     用于处理单一图像的 controller
     """
 
-    def __init__(self, file: str = None, matrix=None):
+    def __init__(self, file: str = None, matrix=None, clr=None):
         if file is not None:
             self.img = cv2.imread(file, cv2.IMREAD_COLOR)
             if isinstance(self.img, type(None)):
                 raise ValueError("当前路径 " + file + " 不是一张图片！")
         else:
             self.img = matrix
-        self.color_space = "RGB"
+        if clr is None:
+            self.color_space = "BGR"
+        else:
+            self.color_space = clr
 
     def cvt_LAB(self):
         """
@@ -23,6 +26,9 @@ class ImageController:
         """
         if self.color_space == "RGB":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2LAB)
+            self.color_space = "LAB"
+        elif self.color_space == "BGR":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
             self.color_space = "LAB"
         return self
 
@@ -34,6 +40,22 @@ class ImageController:
         if self.color_space == "LAB":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2RGB)
             self.color_space = "RGB"
+        elif self.color_space == "BGR":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
+            self.color_space = "RGB"
+        return self
+
+    def cvt_BGR(self):
+        """
+        将图像转换成 bgr 颜色空间
+        :return: self
+        """
+        if self.color_space == "LAB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
+            self.color_space = "BGR"
+        elif self.color_space == "RGB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2BGR)
+            self.color_space = "BGR"
         return self
 
     def resize(self, out_path: str, save: bool, *args):
@@ -97,6 +119,15 @@ class ImageController:
     def k_means(self, k):
         pass
 
+    def as_vector(self):
+        if self.img is None:
+            return None
+        shape = self.img.shape
+        return self.img.reshape((shape[0] * shape[1], shape[2]))
+
+    def as_ndarray(self):
+        return self.img
+
     def as_float(self):
         """
         将数组变为float形式
@@ -112,5 +143,7 @@ class ImageController:
         :return: None
         """
         if self.img is not None:
+            self.img[self.img < 0] *= 0
+            self.img[self.img > 255] = 255 * 2 - self.img[self.img > 255]
             self.img = self.img.astype(np.uint8)
         return self
