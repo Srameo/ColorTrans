@@ -7,7 +7,7 @@ class ImageController:
     用于处理单一图像的 controller
     """
 
-    def __init__(self, file: str = None, matrix=None, clr=None):
+    def __init__(self, file: str = None, matrix: np.ndarray = None, clr: str = None):
         if file is not None:
             self.img = cv2.imread(file, cv2.IMREAD_COLOR)
             if isinstance(self.img, type(None)):
@@ -57,6 +57,17 @@ class ImageController:
             self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2BGR)
             self.color_space = "BGR"
         return self
+
+    def gray_array(self) -> np.ndarray or None:
+        """
+        返回灰色图像的矩阵
+        :return:
+        """
+        if self.color_space == "RGB":
+            return cv2.cvtColor(self.img, cv2.COLOR_RGB2GRAY)
+        elif self.color_space == "BGR":
+            return cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        return None
 
     def resize(self, out_path: str, save: bool, *args):
         """
@@ -125,7 +136,7 @@ class ImageController:
         shape = self.img.shape
         return self.img.reshape((shape[0] * shape[1], shape[2]))
 
-    def as_ndarray(self):
+    def ndarray(self):
         return self.img
 
     def as_float(self):

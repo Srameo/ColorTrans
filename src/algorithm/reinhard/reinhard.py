@@ -1,12 +1,9 @@
+import cv2
+
 from src.image_control.core.control import ImageController
 from src.common_utils.core.path_utils import INPUT_PATH, OUTPUT_PATH
 from src.common_utils.core.path_utils import get_root_path, path_join
 import numpy as np
-import cv2
-
-SRC_IMG = path_join("reinhard", "sea", "day.png")
-REF_IMG = path_join("reinhard", "sea", "night.png")
-OUTPUT_IMG = path_join("reinhard", "sea", "result.png")
 
 
 def mean_LAB(img: ImageController) -> tuple:
@@ -44,34 +41,42 @@ def reinhard(src: ImageController, ref: ImageController) -> ImageController:
     src_std = std_LAB(src)
     ref_std = std_LAB(ref)
 
+    img = np.zeros(src.img.shape)
+
     # src 设置为 float 格式
     src.as_float()
 
     # 减去平均值
-    src.img[..., 0] = src.img[..., 0] - src_m[0]
-    src.img[..., 1] = src.img[..., 1] - src_m[1]
-    src.img[..., 2] = src.img[..., 2] - src_m[2]
+    img[..., 0] = src.img[..., 0] - src_m[0]
+    img[..., 1] = src.img[..., 1] - src_m[1]
+    img[..., 2] = src.img[..., 2] - src_m[2]
 
     # 按照标准差缩放
-    src.img[..., 0] *= ref_std[0] / src_std[0]
-    src.img[..., 1] *= ref_std[1] / src_std[1]
-    src.img[..., 2] *= ref_std[2] / src_std[2]
+    img[..., 0] *= ref_std[0] / src_std[0]
+    img[..., 1] *= ref_std[1] / src_std[1]
+    img[..., 2] *= ref_std[2] / src_std[2]
 
     # 加上目标图像均值
-    src.img[..., 0] = src.img[..., 0] + ref_m[0]
-    src.img[..., 1] = src.img[..., 1] + ref_m[1]
-    src.img[..., 2] = src.img[..., 2] + ref_m[2]
+    img[..., 0] += ref_m[0]
+    img[..., 1] += ref_m[1]
+    img[..., 2] += ref_m[2]
 
     # 保存图像
     src.as_unit()
-    cv2.imwrite(path_join(root_path, OUTPUT_PATH, OUTPUT_IMG), src.cvt_RGB().img)
+    res = ImageController(matrix=img, clr="LAB")
+    return res.as_unit().cvt_BGR()
 
 
 if __name__ == "__main__":
     # 获取图像
+    SRC_IMG = path_join("reinhard", "sea", "day.png")
+    REF_IMG = path_join("reinhard", "sea", "night.png")
+    OUTPUT_IMG = path_join("reinhard", "sea", "result.png")
     root_path = get_root_path()
     src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
 
     # reinhard
-    reinhard(src_ic, ref_ic)
+    cv2.imshow("reinhard", reinhard(src_ic, ref_ic).img)
+    cv2.waitKey()
+    cv2.destroyAllWindows()
