@@ -154,7 +154,7 @@ class ImageController:
         :return: None
         """
         if self.img is not None:
-            self.img[self.img < 0] *= 0
+            self.img[self.img < 0] = 0
             self.img[self.img > 255] = 255 * 2 - self.img[self.img > 255]
             self.img = self.img.astype(np.uint8)
         return self

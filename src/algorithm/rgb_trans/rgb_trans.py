@@ -1,6 +1,6 @@
 import cv2
 
-from src.common_utils.core.path_utils import get_root_path, path_join, INPUT_PATH
+from src.common_utils.core.path_utils import get_root_path, path_join, INPUT_PATH, OUTPUT_PATH
 from src.image_control.core.control import ImageController
 from src.math_utils.core.matrix import Matrix
 import numpy as np
@@ -83,6 +83,7 @@ if __name__ == '__main__':
     root_path = get_root_path()
     src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
+    output_path = path_join(root_path, OUTPUT_PATH, "rgb_trans", )
 
     cv2.imshow("src", src_ic.img)
     cv2.waitKey()
