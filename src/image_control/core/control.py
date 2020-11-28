@@ -9,7 +9,10 @@ class ImageController:
 
     def __init__(self, file: str = None, matrix: np.ndarray = None, clr: str = None):
         if file is not None:
-            self.img = cv2.imread(file, cv2.IMREAD_COLOR)
+            if clr == "GRAY":
+                self.img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+            else:
+                self.img = cv2.imread(file, cv2.IMREAD_COLOR)
             if isinstance(self.img, type(None)):
                 raise ValueError("当前路径 " + file + " 不是一张图片！")
         else:
@@ -18,6 +21,23 @@ class ImageController:
             self.color_space = "BGR"
         else:
             self.color_space = clr
+
+    def cvt_GRAY(self):
+        """
+        将图像转换到灰度空间
+        :return: self
+        """
+        if self.color_space == "RGB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2GRAY)
+            self.color_space = "GRAY"
+        elif self.color_space == "BGR":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            self.color_space = "GRAY"
+        elif self.color_space == "LAB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            self.color_space = "GRAY"
+        return self
 
     def cvt_LAB(self):
         """
@@ -28,6 +48,10 @@ class ImageController:
             self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2LAB)
             self.color_space = "LAB"
         elif self.color_space == "BGR":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
+            self.color_space = "LAB"
+        elif self.color_space == "GRAY":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
             self.color_space = "LAB"
         return self
@@ -43,6 +67,9 @@ class ImageController:
         elif self.color_space == "BGR":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2RGB)
             self.color_space = "RGB"
+        elif self.color_space == "GRAY":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2RGB)
+            self.color_space = "RGB"
         return self
 
     def cvt_BGR(self):
@@ -55,6 +82,9 @@ class ImageController:
             self.color_space = "BGR"
         elif self.color_space == "RGB":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2BGR)
+            self.color_space = "BGR"
+        elif self.color_space == "GRAY":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
             self.color_space = "BGR"
         return self
 
