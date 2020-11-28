@@ -35,6 +35,10 @@ def std_LAB(img: ImageController) -> tuple:
 
 
 def reinhard(src: ImageController, ref: ImageController) -> ImageController:
+    # 将图片变为LAB
+    src.cvt_LAB()
+    ref.cvt_LAB()
+
     # 计算标准差和平均值
     src_m = mean_LAB(src)
     ref_m = mean_LAB(ref)
