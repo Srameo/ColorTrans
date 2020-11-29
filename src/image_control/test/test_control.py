@@ -1,17 +1,22 @@
-from src.image_control import ImageController
-from src.common_utils import INPUT_PATH, OUTPUT_PATH
-from src.common_utils import get_root_path, path_join
+import src.common_utils.core.image_utils as iu
+import src.common_utils.core.path_utils as pu
+from src.image_control.core.control import ImageController
 
 if __name__ == "__main__":
-    root_path = get_root_path()
+    root_path = pu.get_root_path()
 
     # Test Resize
-    input_filename = path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
-    output_filename = path_join("reinhard", "flowers", "red_flower.jpg")
-    input_path = path_join(root_path, INPUT_PATH, input_filename)
-    output_path = path_join(root_path, OUTPUT_PATH, output_filename)
+    input_filename = pu.path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
+    output_filename = pu.path_join("reinhard", "flowers", "red_flower.jpg")
+    input_path = pu.path_join(root_path, pu.INPUT_PATH, input_filename)
+    output_path = pu.path_join(root_path, pu.OUTPUT_PATH, output_filename)
     ic = ImageController(input_path)
-    ic.resize(output_path, True, 50 / 275)
+    iu.print_imgs(ic.ndarray(),
+                  ic.cvt_LAB().ndarray(),
+                  ic.cvt_HSV().ndarray(),
+                  ic.cvt_BGR().ndarray(),
+                  ic.cvt_RGB().ndarray(),
+                  ic.cvt_GRAY().ndarray())
     # ic.resize(output_path, True, 64, 64)
 
     # Test Reshape
