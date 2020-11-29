@@ -188,3 +188,10 @@ class ImageController:
             self.img[self.img > 255] = 255 * 2 - self.img[self.img > 255]
             self.img = self.img.astype(np.uint8)
         return self
+
+    def copy(self):
+        """
+        返回一个资深的复制
+        :return:
+        """
+        return ImageController(matrix=self.img.copy(), clr=self.color_space)

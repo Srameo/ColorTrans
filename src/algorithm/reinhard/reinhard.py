@@ -60,6 +60,8 @@ def reinhard(src: ImageController, ref: ImageController) -> ImageController:
     img[..., 1] *= ref_std[1] / src_std[1]
     img[..., 2] *= ref_std[2] / src_std[2]
 
+    img[np.isnan(img)] = 0
+
     # 加上目标图像均值
     img[..., 0] += ref_m[0]
     img[..., 1] += ref_m[1]

@@ -75,6 +75,8 @@ def rgb_trans(src_img: ImageController, ref_img: ImageController) -> ImageContro
     res_mat = res_vec.reshape(src_img.img.shape)
 
     res = ImageController(matrix=res_mat, clr="RGB").as_unit()
+    src_img.cvt_BGR()
+    ref_img.cvt_BGR()
     return res.cvt_BGR()
 
 
