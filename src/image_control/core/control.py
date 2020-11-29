@@ -22,6 +22,14 @@ class ImageController:
         else:
             self.color_space = clr
 
+    def cvt(self, clr):
+        try:
+            func = getattr(self, f"cvt_{clr}")
+            return func()
+        except Exception as _:
+            print(_)
+            return self
+
     def cvt_HLS(self):
         """
         将图片转换成HLS空间

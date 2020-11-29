@@ -15,7 +15,7 @@ if __name__ == "__main__":
                   ic.cvt_HLS().copy(),
                   ic.cvt_BGR().copy(),
                   ic.cvt_RGB().copy(),
-                  ic.cvt_GRAY().copy())
+                  ic.cvt("GRAY"))
     # ic.resize(output_path, True, 64, 64)
 
     # Test Reshape
