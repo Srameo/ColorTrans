@@ -11,7 +11,7 @@ import threading
 SRC_IMG = "gray_trans/src_img.png"
 REF_IMG = "gray_trans/ref_img.png"
 
-SWATCHES_NUM = 50
+SWATCHES_NUM = 200
 WINDOW_SIZE = 5
 THREADS_NUM = 5
 w1, w2 = 0.5, 0.5
@@ -20,7 +20,7 @@ w1, w2 = 0.5, 0.5
 class UpdateThread(threading.Thread):
     res_img = None
     reg_ref_img = None
-    ref_samples = ((0, 0), 0)
+    ref_samples = (([], []), [])
 
     def __init__(self, low: int, high: int, tid: int):
         threading.Thread.__init__(self)
@@ -40,7 +40,7 @@ class UpdateThread(threading.Thread):
         h, w, c = cls.res_img.img.shape
         i, j = low, 0
         while i < high:
-            print("{:.4f}% in thread {}!".format((i - low) / (high - low), tid))
+            print("{:.4f}% in thread {}!".format((i - low) * 100 / (high - low), tid))
             while j < w:
                 # 对于每个点寻找最优点
                 min_e = np.inf
@@ -111,7 +111,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     src_img.cvt_LAB().as_float()
     ref_img.cvt_LAB().as_float()
 
-    # 2. 将图片的亮度分布调整一致
+    # 2. 将参考图像的亮度调整至类似于原图像
     reg_ref_img_mat = ref_img.img.astype(np.float).copy()
 
     ref_mean_l = np.mean(ref_img.img[..., 0])
