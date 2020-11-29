@@ -1,10 +1,10 @@
 from src.common_utils.core import path_utils as pu
 from src.common_utils.core import image_utils as iu
 from src.image_control.core.control import ImageController
-from src.algorithm.reinhard.reinhard import reinhard
-from src.math_utils.core.k_means import KMeansUtil
+# from src.algorithm.reinhard.reinhard import reinhard
+# from src.math_utils.core.k_means import KMeansUtil
 import numpy as np
-import cv2
+# import cv2
 
 SRC_IMG = "gray_trans/src_img.png"
 REF_IMG = "gray_trans/ref_img.png"
@@ -61,46 +61,59 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     :return:
     """
     # 1. 将图片转换到LAB空间
-    src_img.cvt_LAB()
-    ref_img.cvt_LAB()
+    src_img.cvt_LAB().as_float()
+    ref_img.cvt_LAB().as_float()
 
-    # 2. 将图片的颜色分布调整一致, 此处使用 reinhard
-    reg_src_img = reinhard(src_img, ref_img).cvt_LAB()
+    # 2. 将图片的亮度分布调整一致
+    reg_ref_img_mat = ref_img.img.astype(np.float).copy()
+
+    ref_mean_l = np.mean(ref_img.img[..., 0])
+    src_mean_l = np.mean(src_img.img[..., 0])
+    ref_std_l = np.std(ref_img.img[..., 0])
+    src_std_l = np.std(src_img.img[..., 0])
+
+    reg_ref_img_mat[..., 0] -= ref_mean_l
+    reg_ref_img_mat[..., 0] *= src_std_l / ref_std_l
+    reg_ref_img_mat[..., 0] += src_mean_l
+
+    reg_ref_img = ImageController(matrix=reg_ref_img_mat, clr="LAB")
 
     # 3. 随机取样本
-    ref_sample_x, ref_sample_y = random_swatches(ref_img)
+    ref_sample_x, ref_sample_y = random_swatches(reg_ref_img)
 
     # 4. 计算样本属性
     length = len(ref_sample_x)
     ref_sample_attr = []
     for i in range(length):
-        ref_sample_attr.append(sample_attr(ref_img,
+        ref_sample_attr.append(sample_attr(reg_ref_img,
                                            (ref_sample_x[i], ref_sample_y[i])))
 
     # 5. 寻找最优解，给颜色赋值
-    h_src, w_src, c_src = reg_src_img.img.shape
-    res_img = reg_src_img.copy()
+    h_src, w_src, c_src = src_img.img.shape
+    res_img = src_img.copy()
     i, j = 0, 0
     while i < h_src:
+        print("the {}th row of  the image!".format(i))
         while j < w_src:
             # 对于每个点寻找最优点
             min_e = np.inf
             min_index = 0
             for index, attr in enumerate(ref_sample_attr):
                 e = E(attr,
-                      sample_attr(reg_src_img, (i, j)))
+                      sample_attr(res_img, (i, j)))
                 if e < min_e:
                     min_e = e
                     min_index = index
             # 将alpha与beta分量赋值
-            res_img.img[i, j, 1] = ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 1]
-            res_img.img[i, j, 2] = ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 2]
+            res_img.img[i, j, 1] = reg_ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 1]
+            res_img.img[i, j, 2] = reg_ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 2]
             j += 1
+        j = 0
         i += 1
 
-    src_img.cvt_GRAY()
-    ref_img.cvt_BGR()
-    return res_img.cvt_BGR()
+    src_img.as_unit().cvt_GRAY()
+    ref_img.as_unit().cvt_BGR()
+    return res_img.as_unit().cvt_BGR()
 
 
 if __name__ == '__main__':
