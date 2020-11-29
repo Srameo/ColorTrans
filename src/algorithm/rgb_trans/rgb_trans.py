@@ -3,10 +3,11 @@ import cv2
 from src.common_utils.core.path_utils import get_root_path, path_join, INPUT_PATH, OUTPUT_PATH
 from src.image_control.core.control import ImageController
 from src.math_utils.core.matrix import Matrix
+import src.common_utils.core.image_utils as iu
 import numpy as np
 
-SRC_IMG = "rgb_trans/src_img.JPG"
-REF_IMG = "rgb_trans/ref_img.JPG"
+SRC_IMG = "rgb_trans/src_img.png"
+REF_IMG = "rgb_trans/ref_img.png"
 
 
 def mean_RGB(img: ImageController) -> tuple:
@@ -91,6 +92,9 @@ if __name__ == '__main__':
     cv2.waitKey()
     cv2.imshow("ref", ref_ic.img)
     cv2.waitKey()
-    cv2.imshow("res", rgb_trans(src_ic, ref_ic).img)
+    res_img = rgb_trans(src_ic, ref_ic)
+    cv2.imshow("res", res_img.img)
     cv2.waitKey()
     cv2.destroyAllWindows()
+
+    iu.save_img(res_img.img, path_join(root_path, OUTPUT_PATH, "rgb_trans/res_img.png"))
