@@ -22,6 +22,27 @@ class ImageController:
         else:
             self.color_space = clr
 
+    def cvt_HSV(self):
+        """
+        将图片转换到HSV空间
+        :return: self
+        """
+        if self.color_space == "RGB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_RGB2HSV)
+            self.color_space = "HSV"
+        elif self.color_space == "BGR":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
+            self.color_space = "HSV"
+        elif self.color_space == "LAB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
+            self.color_space = "HSV"
+        elif self.color_space == "GRAY":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
+            self.color_space = "HSV"
+        return self
+
     def cvt_GRAY(self):
         """
         将图像转换到灰度空间
@@ -35,6 +56,10 @@ class ImageController:
             self.color_space = "GRAY"
         elif self.color_space == "LAB":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            self.color_space = "GRAY"
+        elif self.color_space == "HSV":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
             self.color_space = "GRAY"
         return self
@@ -54,6 +79,10 @@ class ImageController:
             self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
             self.color_space = "LAB"
+        elif self.color_space == "HSV":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
+            self.color_space = "LAB"
         return self
 
     def cvt_RGB(self):
@@ -70,6 +99,9 @@ class ImageController:
         elif self.color_space == "GRAY":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2RGB)
             self.color_space = "RGB"
+        elif self.color_space == "HSV":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2RGB)
+            self.color_space = "RGB"
         return self
 
     def cvt_BGR(self):
@@ -85,6 +117,9 @@ class ImageController:
             self.color_space = "BGR"
         elif self.color_space == "GRAY":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
+            self.color_space = "BGR"
+        elif self.color_space == "HSV":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
             self.color_space = "BGR"
         return self
 
@@ -191,7 +226,7 @@ class ImageController:
 
     def copy(self):
         """
-        返回一个资深的复制
+        返回一个自身的复制
         :return:
         """
         return ImageController(matrix=self.img.copy(), clr=self.color_space)
