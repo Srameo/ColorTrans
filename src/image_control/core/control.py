@@ -22,11 +22,38 @@ class ImageController:
         else:
             self.color_space = clr
 
+    def cvt_HLS(self):
+        """
+        将图片转换成HLS空间
+        :return: self
+        """
+        if self.color_space == "HLS":
+            return self
+        if self.color_space == "LAB":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HLS)
+            self.color_space = "HLS"
+            return self
+        elif self.color_space == "HSV":
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
+            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HLS)
+            self.color_space = "HLS"
+            return self
+        try:
+            num = getattr(cv2, f"COLOR_{self.color_space}2HLS")
+            self.img = cv2.cvtColor(self.img, num)
+            self.color_space = "HLS"
+        except Exception as _:
+            print(_)
+        return self
+
     def cvt_HSV(self):
         """
         将图片转换到HSV空间
         :return: self
         """
+        if self.color_space == "HSV":
+            return self
         if self.color_space == "GRAY":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
@@ -45,6 +72,8 @@ class ImageController:
         将图像转换到灰度空间
         :return: self
         """
+        if self.color_space == "GRAY":
+            return self
         if self.color_space == "LAB":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
@@ -68,6 +97,8 @@ class ImageController:
         将图像转换成 lab 颜色空间
         :return: self
         """
+        if self.color_space == "LAB":
+            return self
         if self.color_space == "GRAY":
             self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
@@ -91,6 +122,8 @@ class ImageController:
         将图像转换成 rgb 颜色空间
         :return: self
         """
+        if self.color_space == "RGB":
+            return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2RGB")
             self.img = cv2.cvtColor(self.img, num)
@@ -104,6 +137,8 @@ class ImageController:
         将图像转换成 bgr 颜色空间
         :return: self
         """
+        if self.color_space == "BGR":
+            return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2BGR")
             self.img = cv2.cvtColor(self.img, num)

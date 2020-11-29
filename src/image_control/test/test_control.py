@@ -7,13 +7,12 @@ if __name__ == "__main__":
 
     # Test Resize
     input_filename = pu.path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
-    output_filename = pu.path_join("reinhard", "flowers", "red_flower.jpg")
     input_path = pu.path_join(root_path, pu.INPUT_PATH, input_filename)
-    output_path = pu.path_join(root_path, pu.OUTPUT_PATH, output_filename)
     ic = ImageController(input_path)
     iu.print_imgs(ic.ndarray(),
                   ic.cvt_LAB().ndarray(),
                   ic.cvt_HSV().ndarray(),
+                  ic.cvt_HLS().ndarray(),
                   ic.cvt_BGR().ndarray(),
                   ic.cvt_RGB().ndarray(),
                   ic.cvt_GRAY().ndarray())
