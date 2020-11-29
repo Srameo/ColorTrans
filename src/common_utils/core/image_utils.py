@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+from src.image_control.core.control import ImageController
+
 READ_GRAY = cv2.IMREAD_GRAYSCALE
 READ_COLOR = cv2.IMREAD_COLOR
 
@@ -18,13 +20,15 @@ def read_img(file: str, color: int = READ_GRAY) -> np.ndarray:
     return res
 
 
-def print_img(img: np.ndarray, name: str = "image") -> None:
+def print_img(img: np.ndarray or ImageController, name: str = "image") -> None:
     """
     打印一个图片，此时程序会进入阻塞状态！直到输入任一字符！
     :param img: 图片的数组
     :param name: 窗口的名字
     :return: None
     """
+    if isinstance(img, ImageController):
+        img = img.ndarray()
     cv2.imshow(name, img)
     cv2.waitKey()
     cv2.destroyWindow(name)
@@ -37,16 +41,20 @@ def print_imgs(*imgs) -> None:
     :return: None
     """
     for index, img in enumerate(imgs):
+        if isinstance(img, ImageController):
+            img = img.ndarray()
         cv2.imshow(str(index), img)
     cv2.waitKey()
     cv2.destroyAllWindows()
 
 
-def save_img(img: np.ndarray, file: str) -> None:
+def save_img(img: np.ndarray or ImageController, file: str) -> None:
     """
     保存图片到指定位置
     :param img: 要保存的图片数组
     :param file: 保存的位置
     :return: None
     """
+    if isinstance(img, ImageController):
+        img = img.ndarray()
     cv2.imwrite(file, img)

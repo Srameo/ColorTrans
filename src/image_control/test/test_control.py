@@ -9,13 +9,13 @@ if __name__ == "__main__":
     input_filename = pu.path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
     input_path = pu.path_join(root_path, pu.INPUT_PATH, input_filename)
     ic = ImageController(input_path)
-    iu.print_imgs(ic.ndarray(),
-                  ic.cvt_LAB().ndarray(),
-                  ic.cvt_HSV().ndarray(),
-                  ic.cvt_HLS().ndarray(),
-                  ic.cvt_BGR().ndarray(),
-                  ic.cvt_RGB().ndarray(),
-                  ic.cvt_GRAY().ndarray())
+    iu.print_imgs(ic.copy(),
+                  ic.cvt_LAB().copy(),
+                  ic.cvt_HSV().copy(),
+                  ic.cvt_HLS().copy(),
+                  ic.cvt_BGR().copy(),
+                  ic.cvt_RGB().copy(),
+                  ic.cvt_GRAY().copy())
     # ic.resize(output_path, True, 64, 64)
 
     # Test Reshape

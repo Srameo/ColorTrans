@@ -29,13 +29,8 @@ class ImageController:
         """
         if self.color_space == "HLS":
             return self
-        if self.color_space == "LAB":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HLS)
-            self.color_space = "HLS"
-            return self
-        elif self.color_space == "HSV":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
+        if self.color_space in ["GRAY", "HSV", "LAB"]:
+            self.cvt_BGR()
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HLS)
             self.color_space = "HLS"
             return self
@@ -54,8 +49,8 @@ class ImageController:
         """
         if self.color_space == "HSV":
             return self
-        if self.color_space == "GRAY":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
+        if self.color_space in ["GRAY", "HLS", "LAB"]:
+            self.cvt_BGR()
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
             self.color_space = "HSV"
             return self
@@ -74,13 +69,8 @@ class ImageController:
         """
         if self.color_space == "GRAY":
             return self
-        if self.color_space == "LAB":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_LAB2BGR)
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
-            self.color_space = "GRAY"
-            return self
-        elif self.color_space == "HSV":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
+        if self.color_space in ["HSV", "HLS", "LAB"]:
+            self.cvt_BGR()
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
             self.color_space = "GRAY"
             return self
@@ -99,13 +89,8 @@ class ImageController:
         """
         if self.color_space == "LAB":
             return self
-        if self.color_space == "GRAY":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
-            self.color_space = "LAB"
-            return self
-        elif self.color_space == "HSV":
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_HSV2BGR)
+        if self.color_space in ["HSV", "HLS", "GRAY"]:
+            self.cvt_BGR()
             self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
             self.color_space = "LAB"
             return self
@@ -199,16 +184,11 @@ class ImageController:
         ic.img = out
         return ic
 
-    def reshape(self) -> np.ndarray:
-        height = self.img.shape[0]
-        width = self.img.shape[1]
-        colors = self.img.shape[2]
-        return self.img.reshape((height * width, colors))
-
-    def k_means(self, k):
-        pass
-
-    def as_vector(self):
+    def as_vector(self) -> np.ndarray:
+        """
+        将图片变为向量
+        :return:
+        """
         if self.img is None:
             return None
         shape = self.img.shape
