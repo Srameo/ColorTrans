@@ -11,7 +11,7 @@ import threading
 SRC_IMG = "gray_trans/src_img.png"
 REF_IMG = "gray_trans/ref_img.png"
 
-SWATCHES_NUM = 100
+SWATCHES_NUM = 50
 WINDOW_SIZE = 5
 THREADS_NUM = 10
 w1, w2 = 0.5, 0.5
