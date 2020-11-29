@@ -11,8 +11,9 @@ import threading
 SRC_IMG = "gray_trans/src_img.png"
 REF_IMG = "gray_trans/ref_img.png"
 
-SWATCHES_NUM = 200
+SWATCHES_NUM = 50
 WINDOW_SIZE = 5
+THREADS_NUM = 5
 w1, w2 = 0.5, 0.5
 
 
@@ -28,7 +29,9 @@ class UpdateThread(threading.Thread):
         self.tid = tid
 
     def run(self) -> None:
+        print("thread {} start!".format(self.tid))
         UpdateThread.update_rows(self.low, self.high, self.tid)
+        print("thread {} end!".format(self.tid))
 
     @classmethod
     def update_rows(cls, low: int, high: int, tid: int):
@@ -135,13 +138,15 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     # 5. 寻找最优解，给颜色赋值
     h_src, w_src, c_src = src_img.img.shape
     res_img = src_img.copy()
-    threads_num = 20
+    threads_num = THREADS_NUM
     low = 0
     step = int(h_src / threads_num)
     threads = []
+    # 初始化线程公共变量
     UpdateThread.res_img = res_img
     UpdateThread.reg_ref_img = reg_ref_img
     UpdateThread.ref_samples = (ref_sample_x, ref_sample_y), ref_sample_attr
+    # 创建线程
     for i in range(threads_num - 1):
         thread = UpdateThread(low, low + step, i + 1)
         thread.start()
@@ -151,6 +156,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     thread.start()
     threads.append(thread)
 
+    # 多线程等待结束
     for t in threads:
         t.join()
 
