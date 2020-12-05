@@ -13,8 +13,8 @@ import threading
 SRC_IMG = "gray_trans/src_img.png"
 REF_IMG = "gray_trans/ref_img.png"
 
-SWATCHES_NUM = 1000
-WINDOW_SIZE = 5
+SWATCHES_NUM = 200
+WINDOW_SIZE = 10
 THREADS_NUM = 10
 w = np.array([[0.5], [0.5]])
 
@@ -205,4 +205,4 @@ if __name__ == '__main__':
 
     iu.print_imgs(src_img.img, ref_img.img, res_img.img)
 
-    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/res_img_{ SWATCHES_NUM }.png"))
+    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/res_img_{ WINDOW_SIZE }_{ SWATCHES_NUM }.png"))
