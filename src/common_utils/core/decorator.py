@@ -10,12 +10,3 @@ def timer(func):
         return ans
 
     return wrapper
-
-
-@timer
-def f(i):
-    print(i)
-
-
-if __name__ == '__main__':
-    f(2)

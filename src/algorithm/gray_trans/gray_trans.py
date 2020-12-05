@@ -8,8 +8,6 @@ from src.common_utils.core.decorator import timer
 from src.math_utils.core.kdtree import KDTreeUtil
 import numpy as np
 import threading
-import time
-
 # import cv2
 
 SRC_IMG = "gray_trans/src_img.png"
