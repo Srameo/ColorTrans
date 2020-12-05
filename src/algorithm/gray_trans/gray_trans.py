@@ -2,6 +2,7 @@ from src.common_utils.core import path_utils as pu
 from src.common_utils.core import image_utils as iu
 from src.image_control.core.control import ImageController
 from src.math_utils.core.matrix import Matrix
+from src.common_utils.core.decorator import timer
 # from src.algorithm.reinhard.reinhard import reinhard
 # from src.math_utils.core.k_means import KMeansUtil
 import numpy as np
@@ -101,17 +102,15 @@ def sample_attr_gradient(img: ImageController, loc: tuple, wd_size: int = WINDOW
     kernel_x = Matrix.SCHARR_KERNEL_X
     kernel_y = Matrix.SCHARR_KERNEL_Y
     l = img.img[x, y, 0]
-    part = np.zeros((3, 3))
     mat = img.ndarray()
-    for i in range(3):
-        for j in range(3):
-            try:
-                part[i, j] = mat[x - 1 + i, y - 1 + j, 0]
-            except IndexError:
-                continue
-    gd_x = np.sum(np.multiply(part, kernel_x))
-    gd_y = np.sum(np.multiply(part, kernel_y))
-    gd = abs(gd_x) + abs(gd_y)
+    h, w, c = img.img.shape
+    x_begin = x - int(wd_size / 2) if x > int(wd_size / 2) else 0
+    y_begin = y - int(wd_size / 2) if y > int(wd_size / 2) else 0
+    x_end = x + int(wd_size / 2) + 1 if x + int(wd_size / 2) < h else h
+    y_end = y + int(wd_size / 2) + 1 if y + int(wd_size / 2) < w else w
+    gd_x = Matrix.conv2(mat[x_begin:x_end, y_begin:y_end, 0], kernel_x)
+    gd_y = Matrix.conv2(mat[x_begin:x_end, y_begin:y_end, 0], kernel_y)
+    gd = np.std(abs(gd_x) + abs(gd_y))
     return l, gd
 
 
@@ -128,6 +127,7 @@ def random_swatches(img: ImageController, swa_num: int = SWATCHES_NUM):
     return x, y
 
 
+@timer
 def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageController:
     """
     给灰度图像上色
