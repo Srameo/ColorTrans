@@ -2,8 +2,10 @@ import numpy as np
 
 
 class Matrix:
-    SOBEL_KERNEL_X = np.array([[1, 0, -1], [2, 0, -2], [1, 0, -1]])
-    SOBEL_KERNEL_Y = np.array([[1, 2, 1], [0, 0, 0], [-1, -2, -1]])
+    SOBEL_KERNEL_X = np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]])
+    SOBEL_KERNEL_Y = np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]])
+    SCHARR_KERNEL_X = np.array([[-3, 0, 3], [-10, 0, 10], [-3, 0, 3]])
+    SCHARR_KERNEL_Y = np.array([[-3, -10, -3], [0, 0, 0], [3, 10, 3]])
 
     @staticmethod
     def svd(ar: np.ndarray) -> tuple:

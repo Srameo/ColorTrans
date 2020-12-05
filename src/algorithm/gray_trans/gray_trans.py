@@ -1,6 +1,7 @@
 from src.common_utils.core import path_utils as pu
 from src.common_utils.core import image_utils as iu
 from src.image_control.core.control import ImageController
+from src.math_utils.core.matrix import Matrix
 # from src.algorithm.reinhard.reinhard import reinhard
 # from src.math_utils.core.k_means import KMeansUtil
 import numpy as np
@@ -22,6 +23,7 @@ class UpdateThread(threading.Thread):
     res_img = None
     reg_ref_img = None
     ref_samples = (([], []), [])
+    sample_attr = None
 
     def __init__(self, low: int, high: int, tid: int):
         threading.Thread.__init__(self)
@@ -48,7 +50,7 @@ class UpdateThread(threading.Thread):
                 min_index = 0
                 for index, attr in enumerate(ref_sample_attr):
                     e = E(attr,
-                          sample_attr(cls.res_img, (i, j)))
+                          cls.sample_attr(cls.res_img, (i, j)))
                     if e < min_e:
                         min_e = e
                         min_index = index
@@ -69,9 +71,9 @@ def E(attr1: tuple, attr2: tuple, w1: float = w1, w2: float = w2) -> float:
     return abs(l1 - l2) * w1 + abs(std1 - std2) * w2
 
 
-def sample_attr(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
+def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
     """
-    计算样本的属性
+    计算样本的属性，计算l与std
     :param img: 图像
     :param loc: 样本坐标
     :param wd_size: window size
@@ -86,6 +88,32 @@ def sample_attr(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) ->
     y_end = y + int(wd_size / 2) + 1 if y + int(wd_size / 2) < w else w
     std = np.std(img.img[x_begin:x_end, y_begin:y_end, 0])
     return l, std
+
+
+def sample_attr_gradient(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
+    """
+    计算图片的梯度和l
+    :param img: 图像
+    :param loc: 样本坐标
+    :param wd_size: window size
+    :return: l 与 gradient
+    """
+    x, y = loc
+    kernel_x = Matrix.SCHARR_KERNEL_X
+    kernel_y = Matrix.SCHARR_KERNEL_Y
+    l = img.img[x, y, 0]
+    part = np.zeros((3, 3))
+    mat = img.ndarray()
+    for i in range(3):
+        for j in range(3):
+            try:
+                part[i, j] = mat[x - 1 + i, y - 1 + j, 0]
+            except IndexError:
+                continue
+    gd_x = np.sum(np.multiply(part, kernel_x))
+    gd_y = np.sum(np.multiply(part, kernel_y))
+    gd = abs(gd_x) + abs(gd_y)
+    return l, gd
 
 
 def random_swatches(img: ImageController, swa_num: int = SWATCHES_NUM):
@@ -108,6 +136,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     :param ref_img: 参考图像
     :return:
     """
+    sample_attr = sample_attr_gradient
     # 1. 将图片转换到LAB空间
     src_img.cvt_LAB().as_float()
     ref_img.cvt_LAB().as_float()
@@ -147,6 +176,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     UpdateThread.res_img = res_img
     UpdateThread.reg_ref_img = reg_ref_img
     UpdateThread.ref_samples = (ref_sample_x, ref_sample_y), ref_sample_attr
+    UpdateThread.sample_attr = sample_attr
     # 创建线程
     for i in range(threads_num - 1):
         thread = UpdateThread(low, low + step, i + 1)
@@ -176,6 +206,6 @@ if __name__ == '__main__':
     end = time.time()
 
     iu.print_imgs(src_img.img, ref_img.img, res_img.img)
-    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img.png"))
 
+    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img_gradient.png"))
     print(end - start)
