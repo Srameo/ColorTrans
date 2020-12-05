@@ -201,11 +201,8 @@ if __name__ == '__main__':
     src_img = ImageController(pu.path_join(root_path, pu.INPUT_PATH, SRC_IMG), clr="GRAY")
     ref_img = ImageController(pu.path_join(root_path, pu.INPUT_PATH, REF_IMG))
 
-    start = time.time()
     res_img = gray_trans(src_img, ref_img)
-    end = time.time()
 
     iu.print_imgs(src_img.img, ref_img.img, res_img.img)
 
     iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img_gradient.png"))
-    print(end - start)
