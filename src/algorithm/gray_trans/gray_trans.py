@@ -17,7 +17,7 @@ REF_IMG = "gray_trans/ref_img.png"
 SWATCHES_NUM = 50
 WINDOW_SIZE = 5
 THREADS_NUM = 10
-w1, w2 = 1, 0.5
+w = np.array([0.5, 0.5]).transpose()
 
 
 class UpdateThread(threading.Thread):
@@ -63,13 +63,11 @@ class UpdateThread(threading.Thread):
             i += 1
 
 
-def E(attr1: tuple, attr2: tuple, w1: float = w1, w2: float = w2) -> float:
+def E(attr1: np.ndarray, attr2: np.ndarray, w: np.ndarray = w) -> float:
     """
     计算误差
     """
-    l1, std1 = attr1
-    l2, std2 = attr2
-    return abs(l1 - l2) * w1 + abs(std1 - std2) * w2
+    return np.abs(attr1 - attr2) * w
 
 
 def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
@@ -136,7 +134,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     :param ref_img: 参考图像
     :return:
     """
-    sample_attr = sample_attr_gradient
+    sample_attr = sample_attr_std
     # 1. 将图片转换到LAB空间
     src_img.cvt_LAB().as_float()
     ref_img.cvt_LAB().as_float()
@@ -205,4 +203,4 @@ if __name__ == '__main__':
 
     iu.print_imgs(src_img.img, ref_img.img, res_img.img)
 
-    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img_gradient.png"))
+    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img_std.png"))
