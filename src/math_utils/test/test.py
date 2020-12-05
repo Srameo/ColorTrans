@@ -11,7 +11,7 @@ if __name__ == '__main__':
     root_path = get_root_path()
     src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
-    a = Matrix.conv2(src_ic.gray_array(), Matrix.SOBEL_KERNEL_X)
+    a = Matrix.conv2(src_ic.cvt_GRAY(), Matrix.SOBEL_KERNEL_X)
     cv2.imshow("conv2", a)
     cv2.waitKey()
     cv2.destroyAllWindows()
