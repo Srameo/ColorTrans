@@ -17,7 +17,7 @@ REF_IMG = "gray_trans/ref_img.png"
 SWATCHES_NUM = 50
 WINDOW_SIZE = 5
 THREADS_NUM = 10
-w = np.array([0.5, 0.5]).transpose()
+w = np.array([[0.5], [0.5]])
 
 
 class UpdateThread(threading.Thread):
@@ -67,7 +67,7 @@ def E(attr1: np.ndarray, attr2: np.ndarray, w: np.ndarray = w) -> float:
     """
     计算误差
     """
-    return np.abs(attr1 - attr2) * w
+    return np.abs(attr1 - attr2).dot(w)
 
 
 def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
@@ -86,7 +86,7 @@ def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE
     x_end = x + int(wd_size / 2) + 1 if x + int(wd_size / 2) < h else h
     y_end = y + int(wd_size / 2) + 1 if y + int(wd_size / 2) < w else w
     std = np.std(img.img[x_begin:x_end, y_begin:y_end, 0])
-    return l, std
+    return np.array([[l, std]])
 
 
 def sample_attr_gradient(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> tuple:
@@ -110,7 +110,7 @@ def sample_attr_gradient(img: ImageController, loc: tuple, wd_size: int = WINDOW
     gd_x = Matrix.conv2(mat[x_begin:x_end, y_begin:y_end, 0], kernel_x)
     gd_y = Matrix.conv2(mat[x_begin:x_end, y_begin:y_end, 0], kernel_y)
     gd = np.std(abs(gd_x) + abs(gd_y))
-    return l, gd
+    return np.array([[l, gd]])
 
 
 def random_swatches(img: ImageController, swa_num: int = SWATCHES_NUM):
