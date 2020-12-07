@@ -10,10 +10,10 @@ import numpy as np
 import threading
 # import cv2
 
-SRC_IMG = "gray_trans/src_img.png"
-REF_IMG = "gray_trans/ref_img.png"
+SRC_IMG = "gray_trans/coast_src.png"
+REF_IMG = "gray_trans/coast_ref.png"
 
-SWATCHES_NUM = 200
+SWATCHES_NUM = 1000
 WINDOW_SIZE = 10
 THREADS_NUM = 10
 w = np.array([[0.5], [0.5]])
@@ -205,4 +205,10 @@ if __name__ == '__main__':
 
     iu.print_imgs(src_img.img, ref_img.img, res_img.img)
 
-    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/res_img_{ WINDOW_SIZE }_{ SWATCHES_NUM }.png"))
+    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/coast/res_img_{ WINDOW_SIZE }_{ SWATCHES_NUM }.png"))
+
+    # out1 = ImageController(pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/trees/res_img_5_1000.png"))
+    # out2 = ImageController(pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/trees/res_img_10_1000.png"))
+    #
+    # diff = out1.img.astype(np.int) - out2.img.astype(np.int)
+    # print(diff)
