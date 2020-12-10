@@ -18,9 +18,9 @@ def mean_RGB(img: ImageController) -> tuple:
     """
     if img.color_space != "RGB":
         img.cvt_RGB()
-    mr = np.mean(img.img[..., 0])
-    mg = np.mean(img.img[..., 1])
-    mb = np.mean(img.img[..., 2])
+    mr = np.mean(img.ndarray[..., 0])
+    mg = np.mean(img.ndarray[..., 1])
+    mb = np.mean(img.ndarray[..., 2])
     return mr, mg, mb
 
 
@@ -73,7 +73,7 @@ def rgb_trans(src_img: ImageController, ref_img: ImageController) -> ImageContro
     # res_vec[::, 1] = res_vec_corr[::, 1] / res_vec_corr[::, 3]
     # res_vec[::, 2] = res_vec_corr[::, 2] / res_vec_corr[::, 3]
     res_vec = res_vec_corr[::, 0:3]
-    res_mat = res_vec.reshape(src_img.img.shape)
+    res_mat = res_vec.reshape(src_img.ndarray.shape)
 
     res = ImageController(matrix=res_mat, clr="RGB").as_unit()
     src_img.cvt_BGR()
@@ -88,13 +88,13 @@ if __name__ == '__main__':
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
     output_path = path_join(root_path, OUTPUT_PATH, "rgb_trans", )
 
-    cv2.imshow("src", src_ic.img)
+    cv2.imshow("src", src_ic.ndarray)
     cv2.waitKey()
-    cv2.imshow("ref", ref_ic.img)
+    cv2.imshow("ref", ref_ic.ndarray)
     cv2.waitKey()
     res_img = rgb_trans(src_ic, ref_ic)
-    cv2.imshow("res", res_img.img)
+    cv2.imshow("res", res_img.ndarray)
     cv2.waitKey()
     cv2.destroyAllWindows()
 
-    iu.save_img(res_img.img, path_join(root_path, OUTPUT_PATH, "rgb_trans/res_img.png"))
+    iu.save_img(res_img.ndarray, path_join(root_path, OUTPUT_PATH, "rgb_trans/res_img.png"))

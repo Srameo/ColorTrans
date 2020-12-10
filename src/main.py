@@ -22,5 +22,5 @@ if __name__ == '__main__':
 
     res_img = gray_trans(src_img, ref_img)
 
-    iu.print_imgs(src_img.img, ref_img.img, res_img.img)
-    # iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img.png"))
+    iu.print_imgs(src_img.ndarray, ref_img.ndarray, res_img.ndarray)
+    # iu.save_img(res_img.ndarray, pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/res_img.png"))

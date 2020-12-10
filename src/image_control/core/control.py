@@ -10,13 +10,13 @@ class ImageController:
     def __init__(self, file: str = None, matrix: np.ndarray = None, clr: str = None):
         if file is not None:
             if clr == "GRAY":
-                self.img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
+                self.__img = cv2.imread(file, cv2.IMREAD_GRAYSCALE)
             else:
-                self.img = cv2.imread(file, cv2.IMREAD_COLOR)
-            if isinstance(self.img, type(None)):
+                self.__img = cv2.imread(file, cv2.IMREAD_COLOR)
+            if isinstance(self.__img, type(None)):
                 raise ValueError("当前路径 " + file + " 不是一张图片！")
         else:
-            self.img = matrix
+            self.__img = matrix
         if clr is None:
             self.color_space = "BGR"
         else:
@@ -39,12 +39,12 @@ class ImageController:
             return self
         if self.color_space in ["GRAY", "HSV", "LAB"]:
             self.cvt_BGR()
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HLS)
+            self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2HLS)
             self.color_space = "HLS"
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2HLS")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "HLS"
         except Exception as _:
             print(_)
@@ -59,12 +59,12 @@ class ImageController:
             return self
         if self.color_space in ["GRAY", "HLS", "LAB"]:
             self.cvt_BGR()
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2HSV)
+            self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2HSV)
             self.color_space = "HSV"
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2HSV")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "HSV"
         except Exception as _:
             print(_)
@@ -79,12 +79,12 @@ class ImageController:
             return self
         if self.color_space in ["HSV", "HLS", "LAB"]:
             self.cvt_BGR()
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+            self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2GRAY)
             self.color_space = "GRAY"
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2GRAY")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "GRAY"
         except Exception as _:
             print(_)
@@ -99,12 +99,12 @@ class ImageController:
             return self
         if self.color_space in ["HSV", "HLS", "GRAY"]:
             self.cvt_BGR()
-            self.img = cv2.cvtColor(self.img, cv2.COLOR_BGR2LAB)
+            self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2LAB)
             self.color_space = "LAB"
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2LAB")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "LAB"
         except Exception as _:
             print(_)
@@ -119,7 +119,7 @@ class ImageController:
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2RGB")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "RGB"
         except Exception as _:
             print(_)
@@ -134,7 +134,7 @@ class ImageController:
             return self
         try:
             num = getattr(cv2, f"COLOR_{self.color_space}2BGR")
-            self.img = cv2.cvtColor(self.img, num)
+            self.__img = cv2.cvtColor(self.__img, num)
             self.color_space = "BGR"
         except Exception as _:
             print(_)
@@ -165,14 +165,14 @@ class ImageController:
         :param scale: 缩放比例
         :return: ImageController
         """
-        img = self.img
+        img = self.__img
         width = int(img.shape[1] * scale)
         height = int(img.shape[0] * scale)
         out = cv2.resize(img, (width, height))
         if save:
             cv2.imwrite(out_path, out)
         ic = ImageController()
-        ic.img = out
+        ic.__img = out
         return ic
 
     def __resize_image_size(self, out_path: str, width: int, height: int, save: bool):
@@ -184,12 +184,12 @@ class ImageController:
         :param out_path: 输出路径
         :return: ImageController
         """
-        img = self.img
+        img = self.__img
         out = cv2.resize(img, (width, height))
         if save:
             cv2.imwrite(out_path, out)
         ic = ImageController()
-        ic.img = out
+        ic.__img = out
         return ic
 
     def as_vector(self) -> np.ndarray:
@@ -197,21 +197,25 @@ class ImageController:
         将图片变为向量
         :return:
         """
-        if self.img is None:
+        if self.__img is None:
             return None
-        shape = self.img.shape
-        return self.img.reshape((shape[0] * shape[1], shape[2]))
+        shape = self.__img.shape
+        return self.__img.reshape((shape[0] * shape[1], shape[2]))
 
+    @property
     def ndarray(self):
-        return self.img
+        return self.__img
+
+    def set_img(self, img: np.ndarray):
+        self.__img = img
 
     def as_float(self):
         """
         将数组变为float形式
         :return: None
         """
-        if self.img is not None:
-            self.img = self.img.astype(np.float32)
+        if self.__img is not None:
+            self.__img = self.__img.astype(np.float32)
         return self
 
     def as_unit(self):
@@ -219,10 +223,10 @@ class ImageController:
         讲数组变成uint形式
         :return: None
         """
-        if self.img is not None:
-            self.img[self.img < 0] = 0
-            self.img[self.img > 255] = 255 * 2 - self.img[self.img > 255]
-            self.img = self.img.astype(np.uint8)
+        if self.__img is not None:
+            self.__img[self.__img < 0] = 0
+            self.__img[self.__img > 255] = 255 * 2 - self.__img[self.__img > 255]
+            self.__img = self.__img.astype(np.uint8)
         return self
 
     def copy(self):
@@ -230,4 +234,4 @@ class ImageController:
         返回一个自身的复制
         :return:
         """
-        return ImageController(matrix=self.img.copy(), clr=self.color_space)
+        return ImageController(matrix=self.__img.copy(), clr=self.color_space)

@@ -21,11 +21,11 @@ if __name__ == "__main__":
     # Test Reshape
     # SRC_IMG = path_join("reinhard", "sea", "day.png")
     # ic = ImageController(path_join(root_path, INPUT_PATH, SRC_IMG))
-    # print(ic.img.shape)
-    # h = ic.img.shape[0]
-    # w = ic.img.shape[1]
+    # print(ic.ndarray.shape)
+    # h = ic.ndarray.shape[0]
+    # w = ic.ndarray.shape[1]
     #
-    # reshaped_img = ic.img.reshape((h * w, 3))
+    # reshaped_img = ic.ndarray.reshape((h * w, 3))
     # print(reshaped_img)
     # for i in range(reshaped_img):
     #     print(reshaped_img[i])

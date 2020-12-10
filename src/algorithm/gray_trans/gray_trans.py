@@ -13,8 +13,8 @@ import threading
 SRC_IMG = "gray_trans/coast_src.png"
 REF_IMG = "gray_trans/coast_ref.png"
 
-SWATCHES_NUM = 1000
-WINDOW_SIZE = 10
+SWATCHES_NUM = 100
+WINDOW_SIZE = 5
 THREADS_NUM = 10
 w = np.array([[0.5], [0.5]])
 
@@ -41,7 +41,7 @@ class UpdateThread(threading.Thread):
     def update_rows(cls, low: int, high: int, tid: int):
         ref_sample_loc, ref_sample_attr = cls.ref_samples
         ref_sample_x, ref_sample_y = ref_sample_loc
-        h, w, c = cls.res_img.img.shape
+        h, w, c = cls.res_img.ndarray.shape
         i, j = low, 0
         while i < high:
             print("{:.4f}% in thread {}!".format((i - low) * 100 / (high - low), tid))
@@ -57,8 +57,8 @@ class UpdateThread(threading.Thread):
                 #         min_index = index
                 min_index = cls.kdtree.query(cls.sample_attr(cls.res_img, (i, j)))
                 # 将alpha与beta分量赋值
-                cls.res_img.img[i, j, 1] = cls.reg_ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 1]
-                cls.res_img.img[i, j, 2] = cls.reg_ref_img.img[ref_sample_x[min_index], ref_sample_y[min_index], 2]
+                cls.res_img.ndarray[i, j, 1] = cls.reg_ref_img.ndarray[ref_sample_x[min_index], ref_sample_y[min_index], 1]
+                cls.res_img.ndarray[i, j, 2] = cls.reg_ref_img.ndarray[ref_sample_x[min_index], ref_sample_y[min_index], 2]
                 j += 1
             j = 0
             i += 1
@@ -80,20 +80,20 @@ def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE
     :return: 样本的l, window中的方差
     """
     x, y = loc
-    h, w, c = img.img.shape
-    l = img.img[x, y, 0]
+    h, w, c = img.ndarray.shape
+    l = img.ndarray[x, y, 0]
     x_begin = x - int(wd_size / 2) if x > int(wd_size / 2) else 0
     y_begin = y - int(wd_size / 2) if y > int(wd_size / 2) else 0
     x_end = x + int(wd_size / 2) + 1 if x + int(wd_size / 2) < h else h
     y_end = y + int(wd_size / 2) + 1 if y + int(wd_size / 2) < w else w
-    std = np.std(img.img[x_begin:x_end, y_begin:y_end, 0])
+    std = np.std(img.ndarray[x_begin:x_end, y_begin:y_end, 0])
     return np.array([[l, std]])
 
 
-# def sample_attr_gradient(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> np.ndarray:
+# def sample_attr_gradient(ndarray: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE) -> np.ndarray:
 #     """
 #     计算图片的梯度和l
-#     :param img: 图像
+#     :param ndarray: 图像
 #     :param loc: 样本坐标
 #     :param wd_size: window size
 #     :return: l 与 gradient
@@ -101,9 +101,9 @@ def sample_attr_std(img: ImageController, loc: tuple, wd_size: int = WINDOW_SIZE
 #     x, y = loc
 #     kernel_x = Matrix.SCHARR_KERNEL_X
 #     kernel_y = Matrix.SCHARR_KERNEL_Y
-#     l = img.img[x, y, 0]
-#     mat = img.ndarray()
-#     h, w, c = img.img.shape
+#     l = ndarray.ndarray[x, y, 0]
+#     mat = ndarray.ndarray
+#     h, w, c = ndarray.ndarray.shape
 #     x_begin = x - int(wd_size / 2) if x > int(wd_size / 2) else 0
 #     y_begin = y - int(wd_size / 2) if y > int(wd_size / 2) else 0
 #     x_end = x + int(wd_size / 2) + 1 if x + int(wd_size / 2) < h else h
@@ -121,7 +121,7 @@ def random_swatches(img: ImageController, swa_num: int = SWATCHES_NUM):
     :param swa_num: 样本个数
     :return:
     """
-    h, w, c = img.img.shape
+    h, w, c = img.ndarray.shape
     x = np.random.randint(low=0, high=h, size=swa_num)
     y = np.random.randint(low=0, high=w, size=swa_num)
     return x, y
@@ -141,12 +141,12 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
     ref_img.cvt_LAB().as_float()
 
     # 2. 将参考图像的亮度调整至类似于原图像
-    reg_ref_img_mat = ref_img.img.astype(np.float).copy()
+    reg_ref_img_mat = ref_img.ndarray.astype(np.float).copy()
 
-    ref_mean_l = np.mean(ref_img.img[..., 0])
-    src_mean_l = np.mean(src_img.img[..., 0])
-    ref_std_l = np.std(ref_img.img[..., 0])
-    src_std_l = np.std(src_img.img[..., 0])
+    ref_mean_l = np.mean(ref_img.ndarray[..., 0])
+    src_mean_l = np.mean(src_img.ndarray[..., 0])
+    ref_std_l = np.std(ref_img.ndarray[..., 0])
+    src_std_l = np.std(src_img.ndarray[..., 0])
 
     reg_ref_img_mat[..., 0] -= ref_mean_l
     reg_ref_img_mat[..., 0] *= src_std_l / ref_std_l
@@ -165,7 +165,7 @@ def gray_trans(src_img: ImageController, ref_img: ImageController) -> ImageContr
                                            (ref_sample_x[i], ref_sample_y[i])))
 
     # 5. 寻找最优解，给颜色赋值
-    h_src, w_src, c_src = src_img.img.shape
+    h_src, w_src, c_src = src_img.ndarray.shape
     res_img = src_img.copy()
     threads_num = THREADS_NUM
     low = 0
@@ -203,12 +203,12 @@ if __name__ == '__main__':
 
     res_img = gray_trans(src_img, ref_img)
 
-    iu.print_imgs(src_img.img, ref_img.img, res_img.img)
+    iu.print_imgs(src_img.ndarray, ref_img.ndarray, res_img.ndarray)
 
-    iu.save_img(res_img.img, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/coast/res_img_{ WINDOW_SIZE }_{ SWATCHES_NUM }.png"))
+    iu.save_img(res_img.ndarray, pu.path_join(root_path, pu.OUTPUT_PATH, f"gray_trans/coast/res_img_{ WINDOW_SIZE }_{ SWATCHES_NUM }.png"))
 
     # out1 = ImageController(pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/trees/res_img_5_1000.png"))
     # out2 = ImageController(pu.path_join(root_path, pu.OUTPUT_PATH, "gray_trans/trees/res_img_10_1000.png"))
     #
-    # diff = out1.img.astype(np.int) - out2.img.astype(np.int)
+    # diff = out1.ndarray.astype(np.int) - out2.ndarray.astype(np.int)
     # print(diff)

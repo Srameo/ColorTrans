@@ -10,8 +10,8 @@ class KMeansUtil:
         self.core = KMeans(n_clusters=num)
 
     def fit(self, img: ImageController):
-        h, w, c = img.img.shape
-        x = img.img.reshape(h * w, c)
+        h, w, c = img.ndarray.shape
+        x = img.ndarray.reshape(h * w, c)
         self.core.fit(x)
         label = self.core.labels_  # 每个样本的标签
         # 获取聚类中心，并将其铺平

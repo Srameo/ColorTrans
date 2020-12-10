@@ -14,9 +14,9 @@ def mean_LAB(img: ImageController) -> tuple:
     """
     if img.color_space != "LAB":
         img.cvt_LAB()
-    ml = np.mean(img.img[..., 0])
-    ma = np.mean(img.img[..., 1])
-    mb = np.mean(img.img[..., 2])
+    ml = np.mean(img.ndarray[..., 0])
+    ma = np.mean(img.ndarray[..., 1])
+    mb = np.mean(img.ndarray[..., 2])
     return ml, ma, mb
 
 
@@ -28,9 +28,9 @@ def std_LAB(img: ImageController) -> tuple:
     """
     if img.color_space != "LAB":
         img.cvt_LAB()
-    nl = np.std(img.img[..., 0])
-    na = np.std(img.img[..., 1])
-    nb = np.std(img.img[..., 2])
+    nl = np.std(img.ndarray[..., 0])
+    na = np.std(img.ndarray[..., 1])
+    nb = np.std(img.ndarray[..., 2])
     return nl, na, nb
 
 
@@ -45,15 +45,15 @@ def reinhard(src: ImageController, ref: ImageController) -> ImageController:
     src_std = std_LAB(src)
     ref_std = std_LAB(ref)
 
-    img = np.zeros(src.img.shape)
+    img = np.zeros(src.ndarray.shape)
 
     # src 设置为 float 格式
     src.as_float()
 
     # 减去平均值
-    img[..., 0] = src.img[..., 0] - src_m[0]
-    img[..., 1] = src.img[..., 1] - src_m[1]
-    img[..., 2] = src.img[..., 2] - src_m[2]
+    img[..., 0] = src.ndarray[..., 0] - src_m[0]
+    img[..., 1] = src.ndarray[..., 1] - src_m[1]
+    img[..., 2] = src.ndarray[..., 2] - src_m[2]
 
     # 按照标准差缩放
     img[..., 0] *= ref_std[0] / src_std[0]
@@ -83,6 +83,6 @@ if __name__ == "__main__":
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
 
     # reinhard
-    cv2.imshow("reinhard", reinhard(src_ic, ref_ic).img)
+    cv2.imshow("reinhard", reinhard(src_ic, ref_ic).ndarray)
     cv2.waitKey()
     cv2.destroyAllWindows()
