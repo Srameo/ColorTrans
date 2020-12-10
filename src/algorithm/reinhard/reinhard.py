@@ -12,7 +12,7 @@ def mean_LAB(img: ImageController) -> tuple:
     :param img: 用于计算的图像
     :return: (ml, ma, mb)
     """
-    if img.color_space != "LAB":
+    if img.clr != "LAB":
         img.cvt_LAB()
     ml = np.mean(img.ndarray[..., 0])
     ma = np.mean(img.ndarray[..., 1])
@@ -26,7 +26,7 @@ def std_LAB(img: ImageController) -> tuple:
     :param img: 用于计算的图像
     :return: (nl, na, nb)
     """
-    if img.color_space != "LAB":
+    if img.clr != "LAB":
         img.cvt_LAB()
     nl = np.std(img.ndarray[..., 0])
     na = np.std(img.ndarray[..., 1])

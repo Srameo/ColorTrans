@@ -16,7 +16,7 @@ def mean_RGB(img: ImageController) -> tuple:
     :param img: 用于计算的图像
     :return: (ml, ma, mb)
     """
-    if img.color_space != "RGB":
+    if img.clr != "RGB":
         img.cvt_RGB()
     mr = np.mean(img.ndarray[..., 0])
     mg = np.mean(img.ndarray[..., 1])

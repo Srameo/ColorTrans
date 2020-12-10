@@ -17,7 +17,7 @@ class KMeansUtil:
         # 获取聚类中心，并将其铺平
         centers = self.core.cluster_centers_
         new_img = centers[label].reshape((h, w, c))
-        self.res = ImageController(matrix=new_img, clr=img.color_space)
+        self.res = ImageController(matrix=new_img, clr=img.clr)
 
     def label(self):
         return self.core.labels_

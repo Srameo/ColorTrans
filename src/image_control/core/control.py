@@ -18,9 +18,9 @@ class ImageController:
         else:
             self.__img = matrix
         if clr is None:
-            self.color_space = "BGR"
+            self.__color_space = "BGR"
         else:
-            self.color_space = clr
+            self.__color_space = clr
 
     def cvt(self, clr):
         try:
@@ -35,17 +35,17 @@ class ImageController:
         将图片转换成HLS空间
         :return: self
         """
-        if self.color_space == "HLS":
+        if self.__color_space == "HLS":
             return self
-        if self.color_space in ["GRAY", "HSV", "LAB"]:
+        if self.__color_space in ["GRAY", "HSV", "LAB"]:
             self.cvt_BGR()
             self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2HLS)
-            self.color_space = "HLS"
+            self.__color_space = "HLS"
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2HLS")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2HLS")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "HLS"
+            self.__color_space = "HLS"
         except Exception as _:
             print(_)
         return self
@@ -55,17 +55,17 @@ class ImageController:
         将图片转换到HSV空间
         :return: self
         """
-        if self.color_space == "HSV":
+        if self.__color_space == "HSV":
             return self
-        if self.color_space in ["GRAY", "HLS", "LAB"]:
+        if self.__color_space in ["GRAY", "HLS", "LAB"]:
             self.cvt_BGR()
             self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2HSV)
-            self.color_space = "HSV"
+            self.__color_space = "HSV"
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2HSV")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2HSV")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "HSV"
+            self.__color_space = "HSV"
         except Exception as _:
             print(_)
         return self
@@ -75,17 +75,17 @@ class ImageController:
         将图像转换到灰度空间
         :return: self
         """
-        if self.color_space == "GRAY":
+        if self.__color_space == "GRAY":
             return self
-        if self.color_space in ["HSV", "HLS", "LAB"]:
+        if self.__color_space in ["HSV", "HLS", "LAB"]:
             self.cvt_BGR()
             self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2GRAY)
-            self.color_space = "GRAY"
+            self.__color_space = "GRAY"
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2GRAY")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2GRAY")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "GRAY"
+            self.__color_space = "GRAY"
         except Exception as _:
             print(_)
         return self
@@ -95,17 +95,17 @@ class ImageController:
         将图像转换成 lab 颜色空间
         :return: self
         """
-        if self.color_space == "LAB":
+        if self.__color_space == "LAB":
             return self
-        if self.color_space in ["HSV", "HLS", "GRAY"]:
+        if self.__color_space in ["HSV", "HLS", "GRAY"]:
             self.cvt_BGR()
             self.__img = cv2.cvtColor(self.__img, cv2.COLOR_BGR2LAB)
-            self.color_space = "LAB"
+            self.__color_space = "LAB"
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2LAB")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2LAB")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "LAB"
+            self.__color_space = "LAB"
         except Exception as _:
             print(_)
         return self
@@ -115,12 +115,12 @@ class ImageController:
         将图像转换成 rgb 颜色空间
         :return: self
         """
-        if self.color_space == "RGB":
+        if self.__color_space == "RGB":
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2RGB")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2RGB")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "RGB"
+            self.__color_space = "RGB"
         except Exception as _:
             print(_)
         return self
@@ -130,12 +130,12 @@ class ImageController:
         将图像转换成 bgr 颜色空间
         :return: self
         """
-        if self.color_space == "BGR":
+        if self.__color_space == "BGR":
             return self
         try:
-            num = getattr(cv2, f"COLOR_{self.color_space}2BGR")
+            num = getattr(cv2, f"COLOR_{self.__color_space}2BGR")
             self.__img = cv2.cvtColor(self.__img, num)
-            self.color_space = "BGR"
+            self.__color_space = "BGR"
         except Exception as _:
             print(_)
         return self
@@ -206,6 +206,10 @@ class ImageController:
     def ndarray(self):
         return self.__img
 
+    @property
+    def clr(self):
+        return self.__color_space
+
     def set_img(self, img: np.ndarray):
         self.__img = img
 
@@ -234,4 +238,4 @@ class ImageController:
         返回一个自身的复制
         :return:
         """
-        return ImageController(matrix=self.__img.copy(), clr=self.color_space)
+        return ImageController(matrix=self.__img.copy(), clr=self.__color_space)
