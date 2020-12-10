@@ -28,7 +28,7 @@ def print_img(img: np.ndarray or ImageController, name: str = "image") -> None:
     :return: None
     """
     if isinstance(img, ImageController):
-        img = img.ndarray()
+        img = img.ndarray
     cv2.imshow(name, img)
     cv2.waitKey()
     cv2.destroyWindow(name)
@@ -42,7 +42,7 @@ def print_imgs(*imgs) -> None:
     """
     for index, img in enumerate(imgs):
         if isinstance(img, ImageController):
-            img = img.ndarray()
+            img = img.ndarray
         cv2.imshow(str(index), img)
     cv2.waitKey()
     cv2.destroyAllWindows()
@@ -56,5 +56,5 @@ def save_img(img: np.ndarray or ImageController, file: str) -> None:
     :return: None
     """
     if isinstance(img, ImageController):
-        img = img.ndarray()
+        img = img.ndarray
     cv2.imwrite(file, img)
