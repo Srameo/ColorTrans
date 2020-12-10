@@ -7,10 +7,11 @@ if __name__ == "__main__":
     root_path = pu.get_root_path()
 
     # Test Resize
-    input_filename = pu.path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
+    # input_filename = pu.path_join("reinhard", "flowers", "red_flower_275_183.jpeg")
+    input_filename = pu.path_join("gray_trans", "src_img.png")
     input_path = pu.path_join(root_path, pu.INPUT_PATH, input_filename)
-    ic = ImageController(input_path)
-    slic = ic.superpixel.seeds(2, 15)
+    ic = ImageController(input_path, clr="GRAY")
+    slic = ic.superpixel.seeds(200, 15)
     mask_slic = slic.getLabelContourMask()  # 获取Mask，超像素边缘Mask==1
     label_slic = slic.getLabels()  # 获取超像素标签
     number_slic = slic.getNumberOfSuperpixels()  # 获取超像素数目

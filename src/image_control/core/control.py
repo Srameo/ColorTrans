@@ -3,6 +3,7 @@ import numpy as np
 
 from src.image_control.core.superpixel_util import SuperPixelUtil
 
+
 class ImageController:
     """
     用于处理单一图像的 controller

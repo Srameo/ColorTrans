@@ -2,6 +2,9 @@ import cv2
 
 
 class SuperPixelUtil:
+    """
+    用于计算超像素分割的工具类
+    """
 
     def __init__(self, parent):
         self.__parent = parent
@@ -31,9 +34,10 @@ class SuperPixelUtil:
         :return: seeds
         """
         img = self.__parent.ndarray
+        c = 1 if self.__parent.clr == "GRAY" else img.shape[2]
         seeds = cv2.ximgproc.createSuperpixelSEEDS(img.shape[1],
                                                    img.shape[0],
-                                                   img.shape[2],
+                                                   c,
                                                    num_superpixels,
                                                    num_levels,
                                                    3, histogram_bins, double_step)
