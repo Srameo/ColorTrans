@@ -206,9 +206,17 @@ class ImageController:
     def ndarray(self):
         return self.__img
 
+    @ndarray.setter
+    def ndarray(self, img: np.ndarray):
+        self.__img = img
+
     @property
     def clr(self):
         return self.__color_space
+
+    @clr.setter
+    def clr(self, clr_: str):
+        self.__color_space = clr_
 
     def set_img(self, img: np.ndarray):
         self.__img = img
