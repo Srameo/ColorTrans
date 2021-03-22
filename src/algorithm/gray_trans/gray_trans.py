@@ -10,12 +10,12 @@ import numpy as np
 import threading
 # import cv2
 
-SRC_IMG = "gray_trans/coast_src.png"
-REF_IMG = "gray_trans/coast_ref.png"
+SRC_IMG = "gray_trans/src_img.png"
+REF_IMG = "gray_trans/ref_img.png"
 
-SWATCHES_NUM = 100
+SWATCHES_NUM = 200
 WINDOW_SIZE = 5
-THREADS_NUM = 10
+THREADS_NUM = 1
 w = np.array([[0.5], [0.5]])
 
 

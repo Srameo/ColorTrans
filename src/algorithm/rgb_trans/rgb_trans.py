@@ -6,8 +6,8 @@ from src.math_utils.core.matrix import Matrix
 import src.common_utils.core.image_utils as iu
 import numpy as np
 
-SRC_IMG = "rgb_trans/src_img.png"
-REF_IMG = "rgb_trans/ref_img.png"
+SRC_IMG = "test/scene4/10pm.jpg"
+REF_IMG = "test/scene4/12am.jpg"
 
 
 def mean_RGB(img: ImageController) -> tuple:
@@ -86,15 +86,15 @@ if __name__ == '__main__':
     root_path = get_root_path()
     src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
-    output_path = path_join(root_path, OUTPUT_PATH, "rgb_trans", )
+    output_path = path_join(root_path, OUTPUT_PATH, "test", "scene4", "12am_10pm_rgb.jpg")
 
-    cv2.imshow("src", src_ic.ndarray)
-    cv2.waitKey()
-    cv2.imshow("ref", ref_ic.ndarray)
-    cv2.waitKey()
+    # cv2.imshow("src", src_ic.ndarray)
+    # cv2.waitKey()
+    # cv2.imshow("ref", ref_ic.ndarray)
+    # cv2.waitKey()
     res_img = rgb_trans(src_ic, ref_ic)
-    cv2.imshow("res", res_img.ndarray)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    # cv2.imshow("res", res_img.ndarray)
+    # cv2.waitKey()
+    # cv2.destroyAllWindows()
 
-    iu.save_img(res_img.ndarray, path_join(root_path, OUTPUT_PATH, "rgb_trans/res_img.png"))
+    iu.save_img(res_img.ndarray, output_path)

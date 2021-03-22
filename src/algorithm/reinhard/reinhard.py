@@ -75,14 +75,14 @@ def reinhard(src: ImageController, ref: ImageController) -> ImageController:
 
 if __name__ == "__main__":
     # 获取图像
-    SRC_IMG = path_join("reinhard", "sea", "day.png")
-    REF_IMG = path_join("reinhard", "sea", "night.png")
-    OUTPUT_IMG = path_join("reinhard", "sea", "result.png")
+    SRC_IMG = path_join("test", "scene4", "10pm.jpg")
+    REF_IMG = path_join("test", "scene4", "3pm.jpg")
+    OUTPUT_IMG = path_join("test", "scene4", "3pm_10pm_reinhard.jpg")
     root_path = get_root_path()
     src_ic = ImageController(file=path_join(root_path, INPUT_PATH, SRC_IMG))
     ref_ic = ImageController(file=path_join(root_path, INPUT_PATH, REF_IMG))
 
     # reinhard
-    cv2.imshow("reinhard", reinhard(src_ic, ref_ic).ndarray)
-    cv2.waitKey()
-    cv2.destroyAllWindows()
+    cv2.imwrite(path_join(root_path, OUTPUT_PATH, OUTPUT_IMG), reinhard(src_ic, ref_ic).ndarray)
+    # cv2.waitKey()
+    # cv2.destroyAllWindows()
